@@ -1,4 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+interface Account {
+  accountId: string;
+  name: string;
+  balance: number;
+}
 
 @Component({
   selector: 'app-dashboard',
@@ -6,12 +12,28 @@ import { Component } from '@angular/core';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
-export class Dashboard {
-  accounts = [
-    { name: 'Checking', balance: 1200 },
-    { name: 'Savings', balance: 5400 },
-    { name: 'Investments', balance: 15000 }
-  ]
+export class Dashboard implements OnInit {
+  accounts: Account[] = [];
+  apiUrl = 'https://q8fstdvgh2.execute-api.us-east-2.amazonaws.com/dev/accounts';
+
+  ngOnInit() {
+    this.fetchAccounts();
+  }
+
+  async fetchAccounts(){
+    try {
+      const response = await fetch(this.apiUrl);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const data = await response.json();
+
+      this.accounts = Array.isArray(data) ? data: JSON.parse(data.body);
+      
+    } catch (err) {
+      console.error('Error fetching accounts:', err);
+    }
+  }
+
 
   recentTransactions = [
     { date: '2025-08-10', description: 'Grocery Store', amount: -54.23 },
