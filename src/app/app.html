@@ -1,8 +1,10 @@
-<h1>{{ title }}</h1>
-<p>Welcome to your Finance Dashboard! 🚀</p>
+<nav>
+  <h1>{{ title }}</h1>
+  <a routerLink="/">Dashboard</a> |
+  <a routerLink="/accounts">Accounts</a> |
+  <a routerLink="/transactions">Transactions</a>
+</nav>
 
-<ul>
-  <li *ngFor="let account of accounts">
-    {{ account.name }}: ${{ account.balance}}
-  </li>
-</ul>
+<main>
+  <router-outlet></router-outlet>
+</main>

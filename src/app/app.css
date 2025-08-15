@@ -7,3 +7,14 @@ p {
   text-align: center;
   color: #34495e;
 }
+
+nav a {
+  margin-right: 10px;
+  text-decoration: none;
+  color: blue;
+  cursor: pointer;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}

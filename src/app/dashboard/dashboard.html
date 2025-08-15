@@ -1,0 +1,14 @@
+<h2>Accounts</h2>
+<button (click)="toggleBalances()">
+  {{ showBalances ? 'Hide Balances' : 'Show Balances' }}
+</button>
+<ul>
+    @for (account of accounts; track account.name) {
+    <li>
+    {{ account.name }}:
+    @if (showBalances){
+    ${{ account.balance }}
+    }
+  </li>
+}
+</ul>
