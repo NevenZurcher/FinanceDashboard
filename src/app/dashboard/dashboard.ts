@@ -14,7 +14,11 @@ interface Account {
 })
 export class Dashboard implements OnInit {
   accounts: Account[] = [];
-  apiUrl = 'https://q8fstdvgh2.execute-api.us-east-2.amazonaws.com/dev/accounts';
+  apiUrl = 'https://q8fstdvgh2.execute-api.us-east-2.amazonaws.com/dev';
+
+  accountIdInput = '';
+  nameInput = '';
+  balanceInput: number | null = null;
 
   ngOnInit() {
     this.fetchAccounts();
@@ -22,17 +26,43 @@ export class Dashboard implements OnInit {
 
   async fetchAccounts(){
     try {
-      const response = await fetch(this.apiUrl);
+      const response = await fetch(`${this.apiUrl}/accounts`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       const data = await response.json();
 
       this.accounts = Array.isArray(data) ? data: JSON.parse(data.body);
-      
+
     } catch (err) {
       console.error('Error fetching accounts:', err);
     }
   }
+
+  async addAccount(accountIdInput: HTMLInputElement, nameInput: HTMLInputElement, balanceInput: HTMLInputElement) {
+  try {
+    const accountId = accountIdInput.value;
+    const name = nameInput.value;
+    const balance = Number(balanceInput.value);
+
+    const response = await fetch(`${this.apiUrl}/accounts`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ accountId, name, balance })
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    
+    await this.fetchAccounts();
+
+    // Clear inputs
+    accountIdInput.value = '';
+    nameInput.value = '';
+    balanceInput.value = '';
+  } catch (err) {
+    console.error("Error adding account:", err);
+  }
+}
+
 
 
   recentTransactions = [

@@ -12,3 +12,8 @@
   </li>
 }
 </ul>
+<h3>Add Account</h3>
+<input placeholder="Account ID" #newId id="accountId">
+<input placeholder="Name" #newName id="name">
+<input placeholder="Balance" type="number" #newBalance id="balance">
+<button (click)="addAccount(newId, newName, newBalance)">Add Account</button>
