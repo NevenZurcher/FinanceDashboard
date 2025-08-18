@@ -7,6 +7,7 @@ import { AccountService, Account } from '../services/account.service';
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
+
 export class Dashboard implements OnInit {
   accounts: Account[] = [];
   showBalances = true;
