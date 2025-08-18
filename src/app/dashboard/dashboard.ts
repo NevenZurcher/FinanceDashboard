@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-interface Account {
-  accountId: string;
-  name: string;
-  balance: number;
-}
+import { AccountService, Account } from '../services/account.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,7 +9,9 @@ interface Account {
 })
 export class Dashboard implements OnInit {
   accounts: Account[] = [];
-  apiUrl = 'https://q8fstdvgh2.execute-api.us-east-2.amazonaws.com/dev';
+  showBalances = true;
+
+  constructor(private accountService: AccountService) {}
 
   accountIdInput = '';
   nameInput = '';
@@ -26,13 +23,7 @@ export class Dashboard implements OnInit {
 
   async fetchAccounts(){
     try {
-      const response = await fetch(`${this.apiUrl}/accounts`);
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-      const data = await response.json();
-
-      this.accounts = Array.isArray(data) ? data: JSON.parse(data.body);
-
+      this.accounts = await this.accountService.getAccounts();
     } catch (err) {
       console.error('Error fetching accounts:', err);
     }
@@ -40,17 +31,11 @@ export class Dashboard implements OnInit {
 
   async addAccount(accountIdInput: HTMLInputElement, nameInput: HTMLInputElement, balanceInput: HTMLInputElement) {
   try {
-    const accountId = accountIdInput.value;
-    const name = nameInput.value;
-    const balance = Number(balanceInput.value);
-
-    const response = await fetch(`${this.apiUrl}/accounts`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ accountId, name, balance })
-    });
-
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    await this.accountService.addAccount(
+        accountIdInput.value,
+        nameInput.value,
+        Number(balanceInput.value)
+      );
     
     await this.fetchAccounts();
 
@@ -63,16 +48,6 @@ export class Dashboard implements OnInit {
   }
 }
 
-
-
-  recentTransactions = [
-    { date: '2025-08-10', description: 'Grocery Store', amount: -54.23 },
-    { date: '2025-08-09', description: 'Paycheck', amount: 1500 },
-    { date: '2025-08-07', description: 'Utility Bill', amount: -120.75 }
-  ];
-
-  showBalances = true;
-  
   toggleBalances() {
     this.showBalances = !this.showBalances;
   }
