@@ -6,6 +6,7 @@ import { App } from './app/app';
 import { Dashboard } from './app/dashboard/dashboard';
 import { Accounts } from './app/accounts/accounts';
 import { Transactions } from './app/transactions/transactions';
+import { provideHttpClient } from '@angular/common/http';
 
 
 const routes = [
@@ -17,7 +18,8 @@ const routes = [
 bootstrapApplication(App, {
   providers: [
     ...appConfig.providers,
-    provideRouter(routes)
+    provideRouter(routes),
+    provideHttpClient()
   ]
 })
   .catch((err) => console.error(err));

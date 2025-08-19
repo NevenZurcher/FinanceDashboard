@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService, Account } from '../services/account.service';
+import { TransactionService, Transaction } from '../services/transactions.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -10,9 +11,13 @@ import { AccountService, Account } from '../services/account.service';
 
 export class Dashboard implements OnInit {
   accounts: Account[] = [];
+  transactions: Transaction[] = [];
   showBalances = true;
 
-  constructor(private accountService: AccountService) {}
+  constructor(
+    private accountService: AccountService,
+    private transactionService: TransactionService
+  ) {}
 
   accountIdInput = '';
   nameInput = '';
@@ -20,6 +25,11 @@ export class Dashboard implements OnInit {
 
   ngOnInit() {
     this.fetchAccounts();
+    this.loadTransactions();
+  }
+
+    toggleBalances() {
+    this.showBalances = !this.showBalances;
   }
 
   async fetchAccounts(){
@@ -46,10 +56,13 @@ export class Dashboard implements OnInit {
     balanceInput.value = '';
   } catch (err) {
     console.error("Error adding account:", err);
+    }
   }
-}
-
-  toggleBalances() {
-    this.showBalances = !this.showBalances;
-  }
+  
+  loadTransactions() {
+      this.transactionService.getTransactions().subscribe({
+        next: (data) => this.transactions = data,
+        error: (err) => console.error('Error fetching transactions:', err)
+      });
+    }
 }
